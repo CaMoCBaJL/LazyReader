@@ -20,17 +20,11 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetCursorPos(out Point lpPoint);
         public static Bitmap PrintScreen(Point fP, Point sP)
         {
             Bitmap printscreen = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             Graphics graphics = Graphics.FromImage(printscreen as Image);
-            graphics.CopyFromScreen(0, 0, 0, 0, printscreen.Size);
+            graphics.CopyFromScreen(fP, sP, new Size(Math.Abs(fP.X - sP.X), Math.Abs(fP.Y - sP.Y)));
             if (Math.Abs(fP.X - sP.X) < 5 || Math.Abs(fP.Y - sP.Y) < 5)
             {
                 MessageBox.Show("Слишком маленькая область экрана. Повторите выбор области.");
@@ -38,7 +32,8 @@ namespace WindowsFormsApp1
             }
             else
             {
-            return printscreen.Clone(new Rectangle(new Point(Math.Min(fP.X, sP.X), Math.Min(fP.Y, sP.Y)), new Size(Math.Abs(sP.X - fP.X), Math.Abs(sP.Y - fP.Y))), PixelFormat.Format32bppArgb);
+                return printscreen;
+                //return printscreen.Clone(new Rectangle(new Point(Math.Min(fP.X, sP.X), Math.Min(fP.Y, sP.Y)), new Size(Math.Abs(sP.X - fP.X), Math.Abs(sP.Y - fP.Y))), PixelFormat.Format32bppArgb);
             }
         }
 
